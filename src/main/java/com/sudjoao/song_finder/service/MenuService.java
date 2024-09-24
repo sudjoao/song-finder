@@ -2,18 +2,23 @@ package com.sudjoao.song_finder.service;
 
 import com.sudjoao.song_finder.models.Artist;
 import com.sudjoao.song_finder.models.Gender;
+import com.sudjoao.song_finder.models.Song;
 import com.sudjoao.song_finder.repository.ArtistRepository;
+import com.sudjoao.song_finder.repository.SongRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class MenuService {
     Scanner scanner = new Scanner(System.in);
     ArtistRepository artistRepository;
+    SongRepository songRepository;
 
-    public MenuService(ArtistRepository artistRepository) {
+    public MenuService(ArtistRepository artistRepository, SongRepository songRepository) {
         this.artistRepository = artistRepository;
+        this.songRepository = songRepository;
     }
 
     public void run(){
@@ -44,6 +49,9 @@ public class MenuService {
             case 1:
                 handleRegisterArtist();
                 break;
+            case 2:
+                handleRegisterSong();
+                break;
             default:
                 System.out.println("Invalid option");
                 break;
@@ -68,5 +76,33 @@ public class MenuService {
         }
         Artist artist = new Artist(name, genderList);
         artistRepository.save(artist);
+    }
+
+    void handleRegisterSong() {
+        System.out.println("Type the song name");
+        var name = scanner.nextLine();
+        System.out.println("Type the song duration");
+        var duration = scanner.nextInt();
+        System.out.println("Select the artist(s) that sing this song");
+        List<Artist> artists = new ArrayList<>();
+        int option = -1;
+        while (option != 0){
+            System.out.println("Select an artist");
+            System.out.println("0 - Leave");
+            for(Artist artist : artistRepository.findAll()) {
+                System.out.printf("%d - %s\n", artist.getId(), artist.getName());
+            }
+
+            option = scanner.nextInt();
+            if (option != 0) {
+                Optional<Artist> artist = artistRepository.findById(((long) option));
+                if (artist.isPresent())
+                    artists.add(artist.get());
+                else
+                    System.out.println("Cannot find the artist");
+            }
+        }
+        Song song = new Song(name, duration, artists);
+        songRepository.save(song);
     }
 }

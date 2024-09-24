@@ -19,6 +19,22 @@ public class Artist {
     public Artist() {
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Gender> getGenderList() {
+        return genderList;
+    }
+
+    public List<Song> getSongList() {
+        return songList;
+    }
+
     public Artist(String name, List<Gender> genderList) {
         this.name = name;
         this.genderList = genderList;
