@@ -52,6 +52,12 @@ public class MenuService {
             case 2:
                 handleRegisterSong();
                 break;
+            case 3:
+                handleListArtists();
+                break;
+            case 4:
+                handleListSongs();
+                break;
             default:
                 System.out.println("Invalid option");
                 break;
@@ -104,5 +110,13 @@ public class MenuService {
         }
         Song song = new Song(name, duration, artists);
         songRepository.save(song);
+    }
+
+    void handleListArtists() {
+        artistRepository.findAll().forEach(System.out::println);
+    }
+
+    void handleListSongs() {
+        songRepository.findAll().forEach(System.out::println);
     }
 }

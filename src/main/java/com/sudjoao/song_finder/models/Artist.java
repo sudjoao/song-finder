@@ -12,7 +12,7 @@ public class Artist {
     Long id;
     String name;
     List<Gender> genderList;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "artists")
     List<Song> songList;
 
 
@@ -40,4 +40,10 @@ public class Artist {
         this.genderList = genderList;
     }
 
+    @Override
+    public String toString() {
+        return "Artist: " + name +
+                " | Genres: " + genderList.size() +
+                " | Songs: " + songList.size();
+    }
 }

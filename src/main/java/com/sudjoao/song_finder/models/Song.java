@@ -12,7 +12,7 @@ public class Song {
     Long id;
     String name;
     int durationInSeconds;
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(
             name = "song_artist",
             joinColumns = @JoinColumn(name = "song_id"),
@@ -26,5 +26,12 @@ public class Song {
         this.name = name;
         this.durationInSeconds = durationInSeconds;
         this.artists = artists;
+    }
+
+    @Override
+    public String toString() {
+        return "Song: " + name +
+                " | Duration: " + (durationInSeconds / 60) + "m " + (durationInSeconds % 60) + "s" +
+                " | Artists: " + artists.stream().map(Artist::getName).toList();
     }
 }
