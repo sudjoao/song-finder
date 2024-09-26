@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 public class MenuService {
     Scanner scanner = new Scanner(System.in);
+    GPTService gptService = new GPTService();
     ArtistRepository artistRepository;
     SongRepository songRepository;
 
@@ -60,6 +61,9 @@ public class MenuService {
                 break;
             case 4:
                 handleListSongs();
+                break;
+            case 5:
+                handleSearchArtistInfo();
                 break;
             case 6:
                 handleSearchArtist();
@@ -127,6 +131,13 @@ public class MenuService {
 
     void handleListSongs() {
         songRepository.findAll().forEach(System.out::println);
+    }
+
+    void handleSearchArtistInfo() {
+        System.out.println("Type the artist that you want to look for:");
+        var artist = scanner.nextLine();
+        var info = gptService.getResponse("Bring information about the artist: %s".formatted(artist));
+        System.out.println(info);
     }
 
     void handleSearchArtist() {
