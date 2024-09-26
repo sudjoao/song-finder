@@ -38,6 +38,9 @@ public class MenuService {
         System.out.println("3. List available artists");
         System.out.println("4. List available songs");
         System.out.println("5. Search about any artist info");
+        System.out.println("6. Find by artist name");
+        System.out.println("7. Find by song name");
+        System.out.println("8. Find by max duration");
         System.out.println("0. Leave");
     }
 
@@ -57,6 +60,15 @@ public class MenuService {
                 break;
             case 4:
                 handleListSongs();
+                break;
+            case 6:
+                handleSearchArtist();
+                break;
+            case 7:
+                handleSearchSongByName();
+                break;
+            case 8:
+                handleSearchSongByMaxDuration();
                 break;
             default:
                 System.out.println("Invalid option");
@@ -102,10 +114,7 @@ public class MenuService {
             option = scanner.nextInt();
             if (option != 0) {
                 Optional<Artist> artist = artistRepository.findById(((long) option));
-                if (artist.isPresent())
-                    artists.add(artist.get());
-                else
-                    System.out.println("Cannot find the artist");
+                artist.ifPresentOrElse(artists::add, () -> System.out.println("Cannot find the artist"));
             }
         }
         Song song = new Song(name, duration, artists);
@@ -118,5 +127,26 @@ public class MenuService {
 
     void handleListSongs() {
         songRepository.findAll().forEach(System.out::println);
+    }
+
+    void handleSearchArtist() {
+        System.out.println("Type the artist name");
+        var name = scanner.nextLine();
+        List<Artist> artists = artistRepository.findByNameContainingIgnoreCase(name);
+        artists.forEach(System.out::println);
+    }
+
+    void handleSearchSongByName() {
+        System.out.println("Type the song name");
+        var name = scanner.nextLine();
+        List<Song> songList = songRepository.findByPartialName(name);
+        songList.forEach(System.out::println);
+    }
+
+    void handleSearchSongByMaxDuration() {
+        System.out.println("Type the song max duration");
+        var duration = scanner.nextInt();
+        List<Song> songList = songRepository.findByDurationLessThan(duration);
+        songList.forEach(System.out::println);
     }
 }
